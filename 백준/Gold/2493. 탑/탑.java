@@ -4,23 +4,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static final long HEIGHT2BIGNUM = 1000000;
+    public static class Tower {
+        public int index;
+        public int height;
 
-    public static long getHeight(final long mixed) {
-        return mixed / HEIGHT2BIGNUM;
-    }
-
-    public static int getIndex(final long mixed) {
-        return (int) (mixed % HEIGHT2BIGNUM);
-    }
-
-    public static long mix(final long height, final int index) {
-        return height * HEIGHT2BIGNUM + index;
+        Tower(int i, int h) {
+            index = i;
+            height = h;
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -28,27 +23,25 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         int n = Integer.parseInt(bf.readLine());
         StringTokenizer st = new StringTokenizer(bf.readLine());
+        int[] tower = new int[n + 1];
+        tower[0] = Integer.MAX_VALUE;
+        Deque<Tower> deque = new ArrayDeque<>();
+        Deque<Integer> ans = new ArrayDeque<>();
+        for (int i = 1; i <= n; i++)
+            tower[i] = Integer.parseInt(st.nextToken());
+        deque.addLast(new Tower(0, tower[0]));
 
-        long[] towers = new long[n];
-        for (int i = 0; i < n; i++)
-            towers[i] = Integer.parseInt(st.nextToken());
-
-        ArrayList<Integer> ans = new ArrayList<>();
-        Deque<Long> deque = new ArrayDeque<>();
-        deque.add(mix(1_000_000_000L, 0));
-        for (int i = 0; i < n; i++) {
-            while (!deque.isEmpty() && getHeight(deque.peekLast()) < towers[i]) {
+        for (int i = 1; i <= n; i++) {
+            Tower tmp = new Tower(i, tower[i]);
+            while (!deque.isEmpty() && deque.peekLast().height < tower[i]) {
                 deque.pollLast();
             }
-
-            ans.add(getIndex(deque.peekLast()));
-            deque.addLast(mix(towers[i], i + 1));
+            ans.addLast(deque.peekLast().index);
+            deque.addLast(tmp);
         }
-
-        for (final int index : ans) {
-            bw.write(index + " ");
+        for (int idx : ans) {
+            bw.write(idx + " ");
         }
-
         bw.write("\n");
         bw.flush();
         bw.close();
