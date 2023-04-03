@@ -10,18 +10,21 @@ public class Main {
     public static int full;
 
     public static int dfs(int cur, int visit) {
+        // 재귀 종료 조건. 모든 마을을 방문한 경우.
         if (visit == full) {
             int goal = weight[cur][0];
             if (goal < max) {
                 dp[cur][visit] = goal;
                 return goal;
             } else {
+                // 다 돌았는데 방문 불가능한 경우와 돌지 않은 경우 나누기 위해 max-1저장.
                 return max - 1;
             }
         }
         if (dp[cur][visit] < max)
             return dp[cur][visit];
 
+        // 방문했으므로 max-1 저장.
         dp[cur][visit] = max - 1;
         for (int i = 0; i < n; i++) {
             int cmp = (1 << i);
