@@ -11,6 +11,7 @@ public class Main {
         long start = 1;
         int digit = 1;
         long nextDigit = 10;
+        // 자릿수의 갯수만큼 k에서 빼줌.
         while (digit < k) {
             k -= digit;
             if (++start == nextDigit) {
@@ -18,6 +19,7 @@ public class Main {
                 digit++;
             }
         }
+        // start에는 k번째 수를 포함하는 숫자가 저장됨. => substr
         if (n < start) bw.write(-1 + "\n");
         else {
             String ans = Long.toString(start);
