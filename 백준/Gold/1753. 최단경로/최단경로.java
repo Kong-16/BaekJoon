@@ -1,17 +1,12 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static int v;
-    public static int e;
-    public static int k;
+    public static int v, e, k;
+    public static int MAX = Integer.MAX_VALUE;
     public static int[] dist;
     public static ArrayList<Edge>[] graph;
 
@@ -20,29 +15,29 @@ public class Main {
         public int to;
         public int weight;
 
-        Edge(int f, int t, int w) {
+        public Edge(int f, int t, int w) {
             from = f;
             to = t;
             weight = w;
         }
 
         @Override
-        public int compareTo(Edge a) {
-            return this.weight - a.weight;
+        public int compareTo(Edge o) {
+            return this.weight - o.weight;
         }
     }
 
-    public static void dijkstra(int s) {
-        Arrays.fill(dist, Integer.MAX_VALUE);
-        dist[s] = 0;
+    public static void dijkstra(int start) {
         PriorityQueue<Edge> pq = new PriorityQueue<>();
-        pq.add(new Edge(s, s, 0));
+        Arrays.fill(dist, MAX);
+        dist[start] = 0;
+        pq.add(new Edge(start, start, 0));
         while (!pq.isEmpty()) {
-            Edge u = pq.poll();
-            for (Edge e : graph[u.to]) {
-                if (e.weight + u.weight < dist[e.to]) {
-                    dist[e.to] = e.weight + u.weight;
-                    pq.add(new Edge(e.from, e.to, dist[e.to]));
+            Edge e = pq.poll();
+            for (Edge i : graph[e.to]) {
+                if (e.weight + i.weight < dist[i.to]) {
+                    dist[i.to] = e.weight + i.weight;
+                    pq.add(new Edge(i.from, i.to, dist[i.to]));
                 }
             }
         }
@@ -55,29 +50,25 @@ public class Main {
         v = Integer.parseInt(st.nextToken());
         e = Integer.parseInt(st.nextToken());
         k = Integer.parseInt(br.readLine());
-
-        dist = new int[v];
-        graph = new ArrayList[v];
-        for (int i = 0; i < v; i++) {
+        graph = new ArrayList[v + 1];
+        dist = new int[v + 1];
+        for (int i = 0; i <= v; i++) {
             graph[i] = new ArrayList<>();
         }
         for (int i = 0; i < e; i++) {
             st = new StringTokenizer(br.readLine());
-            int from = Integer.parseInt(st.nextToken()) - 1;
-            int to = Integer.parseInt(st.nextToken()) - 1;
-            int weight = Integer.parseInt(st.nextToken());
-            graph[from].add(new Edge(from, to, weight));
-        }
-        dijkstra(k - 1);
+            int f = Integer.parseInt(st.nextToken());
+            int t = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
 
-        for (int i = 0; i < v; i++) {
-            if (dist[i] == Integer.MAX_VALUE)
-                bw.write("INF" + "\n");
-            else
-                bw.write(dist[i] + "\n");
+            graph[f].add(new Edge(f, t, w));
+        }
+        dijkstra(k);
+        for (int i = 1; i <= v; i++) {
+            if (dist[i] == MAX) bw.write("INF\n");
+            else bw.write(dist[i] + "\n");
         }
         bw.flush();
         bw.close();
     }
-
 }
