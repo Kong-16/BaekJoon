@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -11,6 +10,7 @@ public class Main {
 
     public static void dfs(int cur, int end, int arrNum, int total) {
         if (cur == end) {
+            // 한 쪽 배열에서 완성되면 다른 한 쪽 안봐도 됨.
             if (total == s) ans++;
             sum[arrNum].add(total);
             return;
@@ -64,14 +64,17 @@ public class Main {
         for (int i = 0; i < n; i++) arr[i] = Integer.parseInt(st.nextToken());
         sum[0] = new ArrayList<>();
         sum[1] = new ArrayList<>();
+        // 2^40의 조합을 봐야하므로 오래걸림 => 반 반 나눠서 조합한 뒤 양 쪽의 합이 s되는 수 찾음.
         dfs(0, n / 2, 0, 0);
         dfs(n / 2, n, 1, 0);
         for (int i = 0; i < 2; i++) {
+            //모두 선택하지 않은 경우는 제외해야 하므로 마지막 원소 (0) 제거
             sum[i].remove(sum[i].size() - 1);
             sum[i].sort(null);
         }
         length = sum[1].size() - 1;
         for (int f : sum[0]) {
+            // 같은 숫자가 중복될 수 있으므로 시작지점, 끝지점을 찾아서 빼줌. => 갯수
             int l = bsl(s - f);
             int r = bsr(s - f);
             if (l != -1) ans += r - l + 1;
