@@ -2,15 +2,17 @@ import sys
 
 input = sys.stdin.readline
 
-n = int(input())
+n = input().strip()
 
 cnt = 0
-while 10 <= n:
+while 1 < len(n):
     sum = 0
     cnt += 1
-    nStr = str(n)
-    for i in nStr:
+    for i in n:
         sum += int(i)
-    n = sum
+    n = str(sum)
 print(cnt)
-print("YES" if n % 3 == 0 else "NO")
+if int(n) % 3 == 0:
+    print("YES")
+else:
+    print("NO")
