@@ -12,4 +12,7 @@ n = int(input().rstrip())
 for i in range(2, n + 1):
     dq.append((dq.popleft() + dq[0]) % 1000000007)
 
-print(dq[1])
+if n == 0:
+    print(0)
+else:
+    print(dq[1])
